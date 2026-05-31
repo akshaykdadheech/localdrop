@@ -12,7 +12,7 @@ Open a webpage. See nearby devices. Send files — directly, at WiFi speed.
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ed)](https://hub.docker.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**[Self-Host Guide](SELF-HOST.md)** · **[Report Bug](https://github.com/akshaykdadheech/localdrop/issues)**
+**[Try Live Demo](https://localdrop-4fddd39fb6ad.herokuapp.com)** · **[Self-Host Guide](SELF-HOST.md)** · **[Report Bug](https://github.com/akshaykdadheech/localdrop/issues)**
 
 </div>
 
@@ -52,7 +52,7 @@ Files transfer **directly between devices over your local WiFi** using WebRTC. Y
 
 ### Use the public instance
 
-Self-host with Docker (see below) or run from source, then open the URL on both devices.
+Open **[localdrop-4fddd39fb6ad.herokuapp.com](https://localdrop-4fddd39fb6ad.herokuapp.com)** on both devices on the same WiFi.
 
 ### Self-host with Docker
 
