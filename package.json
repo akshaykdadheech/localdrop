@@ -8,7 +8,8 @@
     "build": "npm run build -w server && npm run build -w client",
     "test": "npm run test -w server && npm run test -w client",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
