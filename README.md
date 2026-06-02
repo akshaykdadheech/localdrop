@@ -14,6 +14,8 @@ Open a webpage. See nearby devices. Send files — directly, at WiFi speed.
 
 **[Try Live Demo](https://localdrop-4fddd39fb6ad.herokuapp.com)** · **[Self-Host Guide](SELF-HOST.md)** · **[Report Bug](https://github.com/akshaykdadheech/localdrop/issues)**
 
+![LocalDrop Demo](demo.gif)
+
 </div>
 
 ---
