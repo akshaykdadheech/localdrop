@@ -42,7 +42,9 @@ export function handleMessage(raw: string, client: Client, rooms: RoomManager): 
       // Check if anyone already in this code room is on a different subnet
       const existingPeers = rooms.peersInCode(code);
       const foreignPeer = existingPeers.find((p) => {
-        if (p.roomKey === client.roomKey) return false; // same subnet room already
+        // if both have local subnet info, use that for comparison
+        if (client.localSubnet && p.localSubnet) return client.localSubnet !== p.localSubnet;
+        // fallback: compare public IPs
         return !sameSubnet(p.ip, client.ip);
       });
       if (foreignPeer) {
@@ -84,8 +86,8 @@ export function handleMessage(raw: string, client: Client, rooms: RoomManager): 
 
     case 'set-local-subnet': {
       const subnet = msg.subnet.trim();
-      // validate: must look like 3 octets e.g. "192.168.43"
       if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(subnet)) break;
+      client.localSubnet = subnet;
       const newKey = `subnet:${subnet}`;
       if (client.roomKey === newKey) break;
       rooms.broadcast(client, { type: 'peer-left', peerId: client.id });

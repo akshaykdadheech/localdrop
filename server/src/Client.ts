@@ -6,6 +6,7 @@ export class Client {
   displayName: string;
   readonly avatarSeed: string;
   readonly ip: string;
+  localSubnet: string | null = null;
   roomKey: string; // current room key (IP-based or code-based)
 
   constructor(
