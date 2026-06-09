@@ -7,6 +7,7 @@ export interface AnswerMsg { type: 'answer'; to: string; sdp: string }
 export interface IceCandidateMsg { type: 'ice-candidate'; to: string; candidate: RTCIceCandidateInit }
 
 export interface SetNameMsg { type: 'set-name'; name: string }
+export interface SetLocalSubnetMsg { type: 'set-local-subnet'; subnet: string }
 
 export type ClientMessage =
   | PingMsg
@@ -15,7 +16,8 @@ export type ClientMessage =
   | OfferMsg
   | AnswerMsg
   | IceCandidateMsg
-  | SetNameMsg;
+  | SetNameMsg
+  | SetLocalSubnetMsg;
 
 // Server → Client
 export interface PongMsg { type: 'pong' }

@@ -11,6 +11,28 @@ interface Events {
 const BASE_DELAY = 1000;
 const MAX_DELAY = 30_000;
 
+async function detectLocalSubnet(): Promise<string | null> {
+  return new Promise((resolve) => {
+    try {
+      const pc = new RTCPeerConnection({ iceServers: [] });
+      pc.createDataChannel('');
+      pc.createOffer().then(o => pc.setLocalDescription(o)).catch(() => resolve(null));
+      const timer = setTimeout(() => { pc.close(); resolve(null); }, 3000);
+      pc.onicecandidate = (e) => {
+        if (!e.candidate) { clearTimeout(timer); pc.close(); resolve(null); return; }
+        const match = e.candidate.candidate.match(/(\d+)\.(\d+)\.(\d+)\.\d+/);
+        if (match) {
+          clearTimeout(timer);
+          pc.close();
+          resolve(`${match[1]}.${match[2]}.${match[3]}`);
+        }
+      };
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
 export class SignalingClient extends EventEmitter<Events> {
   private ws: WebSocket | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
@@ -58,11 +80,14 @@ export class SignalingClient extends EventEmitter<Events> {
 
     this.ws.binaryType = 'arraybuffer';
 
-    this.ws.onopen = () => {
+    this.ws.onopen = async () => {
       this.attempt = 0;
       this._setStatus('connected');
       this._startPing();
-      // drain queue
+      const subnet = await detectLocalSubnet();
+      if (subnet && this.ws?.readyState === WebSocket.OPEN) {
+        this.ws.send(JSON.stringify({ type: 'set-local-subnet', subnet }));
+      }
       while (this.queue.length) this.ws!.send(JSON.stringify(this.queue.shift()));
     };
 

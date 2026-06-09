@@ -30,5 +30,6 @@ export interface AnswerMsg { type: 'answer'; to: string; sdp: string }
 export interface IceCandidateMsg { type: 'ice-candidate'; to: string; candidate: RTCIceCandidateInit }
 
 export interface SetNameMsg { type: 'set-name'; name: string }
+export interface SetLocalSubnetMsg { type: 'set-local-subnet'; subnet: string }
 
-export type ClientMessage = PingMsg | JoinRoomCodeMsg | LeaveRoomMsg | OfferMsg | AnswerMsg | IceCandidateMsg | SetNameMsg;
+export type ClientMessage = PingMsg | JoinRoomCodeMsg | LeaveRoomMsg | OfferMsg | AnswerMsg | IceCandidateMsg | SetNameMsg | SetLocalSubnetMsg;

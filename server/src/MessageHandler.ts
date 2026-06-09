@@ -41,7 +41,10 @@ export function handleMessage(raw: string, client: Client, rooms: RoomManager): 
       }
       // Check if anyone already in this code room is on a different subnet
       const existingPeers = rooms.peersInCode(code);
-      const foreignPeer = existingPeers.find((p) => !sameSubnet(p.ip, client.ip));
+      const foreignPeer = existingPeers.find((p) => {
+        if (p.roomKey === client.roomKey) return false; // same subnet room already
+        return !sameSubnet(p.ip, client.ip);
+      });
       if (foreignPeer) {
         client.send({ type: 'room-error', message: 'This code was created on a different network. Both devices must be on the same WiFi.' });
         return;
@@ -76,6 +79,20 @@ export function handleMessage(raw: string, client: Client, rooms: RoomManager): 
       if (target) {
         target.send({ type: 'ice-candidate', from: client.id, candidate: msg.candidate });
       }
+      break;
+    }
+
+    case 'set-local-subnet': {
+      const subnet = msg.subnet.trim();
+      // validate: must look like 3 octets e.g. "192.168.43"
+      if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(subnet)) break;
+      const newKey = `subnet:${subnet}`;
+      if (client.roomKey === newKey) break;
+      rooms.broadcast(client, { type: 'peer-left', peerId: client.id });
+      rooms.move(client, newKey);
+      const peers = rooms.peers(client);
+      client.send({ type: 'peer-list', peers: peers.map((p) => p.toPeerInfo()) });
+      rooms.broadcast(client, { type: 'peer-joined', peer: client.toPeerInfo() });
       break;
     }
   }
